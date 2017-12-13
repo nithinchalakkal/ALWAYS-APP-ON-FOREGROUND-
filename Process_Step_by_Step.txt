@@ -1,0 +1,79 @@
+	
+	// Copy Place ServiceToChekApp.java in Application Package.
+
+========================================================================================================================
+ 	// Place these below 2 function in CommonFunction.Java
+	*Function 1
+
+		public static boolean isAppRunning(Context context,String appPackageName) {
+	        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+	        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+	        if (appProcesses == null) {
+	            return false;
+	        }
+	        final String packageName = appPackageName;
+	        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+	            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
+	                Log.e("app",appPackageName);
+	                return true;
+	            }
+	        }
+	        return false;
+	    }
+
+
+	*Function 2
+	public static Double logHeapMem() {
+			Double allocated = new Double(Debug.getNativeHeapAllocatedSize())
+					/ new Double((1048576));
+			Double available = new Double(Debug.getNativeHeapSize()) / 1048576.0;
+			Double free = new Double(Debug.getNativeHeapFreeSize()) / 1048576.0;
+			DecimalFormat df = new DecimalFormat();
+			df.setMaximumFractionDigits(2);
+			df.setMinimumFractionDigits(2);
+
+			Log.d("tag", "debug now.heap native: allocated " + df.format(allocated)
+					+ "MB of " + df.format(available) + "MB (" + df.format(free)
+					+ "MB free)");
+
+			return available;
+
+
+
+========================================================================================================================
+	// Declare service in Manifest.xml
+   	<service
+        android:name="Application_PAckageName.ServiceToChekApp"
+        android:label="Service To Chek App" >
+        </service>
+
+
+========================================================================================================================
+
+	// Function Call to activate service from activity
+
+	Intent i = new Intent(MainActivity.this, ServiceToChekApp.class);
+	MainActivity.this.startService(i);
+
+
+
+	// Function Call to Deactivate service from activity
+	
+
+	stopService(new Intent(Activity_Name.this, ServiceToChekApp.class));               
+	SettingsActivity.this.getPackageManager().clearPackagePreferredActivities(SettingsActivity.this.getPackageName());
+        finish();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        moveTaskToBack(true);
+        System.exit(0);
+	
+
+========================================================================================================================
+
+
+			
+
+		}
